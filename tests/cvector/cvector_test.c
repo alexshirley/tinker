@@ -1,7 +1,6 @@
 #include <greatest.h>
 
-
-TEST dummy_test(){
+TEST dummy_test() {
     PASS();
 }
 
