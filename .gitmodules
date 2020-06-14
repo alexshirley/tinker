@@ -1,0 +1,3 @@
+[submodule "ThirdParty/greatest"]
+	path = ThirdParty/greatest
+	url = https://github.com/silentbicycle/greatest.git
