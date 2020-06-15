@@ -72,10 +72,16 @@ TEST cvector_resize_test() {
     uint16_t testval = 1;
     ASSERT_EQ(true, cvector_set(hdl, 0, &testval));
 
-    // Let's try resizing to use the full block
-    ASSERT_EQ(true,cvector_resize(&hdl,block,1000));
+    // Try resizing to use the full block
+    ASSERT_EQ(true, cvector_resize(&hdl, block, 1000));
     int capacity = cvector_capacity(hdl);
     ASSERT(capacity > 400);
+    // Peek the value we set previously
+    uint16_t peek;
+    ASSERT_EQ(true, cvector_get(hdl, 0, &peek));
+    ASSERT_EQ(1, peek);
+    peek = 2;
+    ASSERT_EQ(true, cvector_push_back(hdl, &peek));
 
     PASS();
 }
