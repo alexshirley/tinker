@@ -7,6 +7,7 @@ include(CTest)
 include_directories( 
     .
     ../ThirdParty/greatest
+    ../inc/tinker
 )
 
 # At first, we want all the targets defined in the subdirectories to have the same warnings configured.
