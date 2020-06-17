@@ -1,3 +1,9 @@
+#ifndef TINKER_CVECTOR_H
+#define TINKER_CVECTOR_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*
 cvector is a rough replacment for std::vector in C++, supporting basic functions such as accessing by index, push_back, pop_back
 */
@@ -17,3 +23,9 @@ bool cvector_set(cvector_t* vec, unsigned long element_index, void* value);
 bool cvector_is_empty(cvector_t* vec);
 int cvector_capacity(cvector_t* vec);
 bool cvector_reserve(cvector_t* vec, size_t number_of_elements);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+#endif // TINKE_CVECTOR_H Guard
