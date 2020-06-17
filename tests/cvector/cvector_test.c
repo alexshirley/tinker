@@ -101,9 +101,9 @@ TEST cvector_resize_realloc() {
     uint32_t peek;
     ASSERT_EQ(true, cvector_get(hdl, 0, &peek));
     ASSERT_EQ(0xdeadbeef, peek);
-     peek = 2;
-     ASSERT_EQ(true, cvector_push_back(hdl, &peek));
-     free(block);
+    peek = 2;
+    ASSERT_EQ(true, cvector_push_back(hdl, &peek));
+    free(block);
     PASS();
 }
 
