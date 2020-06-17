@@ -4,6 +4,27 @@ Collection of C Abstract Data Types targeted at Embedded Systems
 ## Motivation
 Why another C library you may ask?
 
-* First, I'm tired with seeing fifos/ring-buffers, stacks, priority queues, etc. being implemented from scratch, over and over again, typically embedded right in other functions; I can't tell you how many hidden FIFO's I've work on in 2020, each one with bugs. I want some containers which abstract some of that non-sense away, and make C a palatable language, especially as I spend a lot of time in the embedded systems realm, where I don't always have access to a C++ compiler.
+* First, I want a handful of Abstract Data Types and Algortihms that are testable and easily added to embedded systems
 
-* Second, I'm  astounded by the number of developers coming out of college who don't understand things like Abstract Data Type implementation in C, Unit Testing, Benchmarking, etc. Lots of devs know how to write a for-loop, but few know how to make something readable. 
+* Second, I want new developers to use this as a reference.
+
+## License
+GPLv3 - In the future I may provide a commercial license with a Patreon Subscription.
+
+## Building
+If you're using Eclipse, point your paths; KEIL, add the files to your project. I'll eventually research how to do this on Arduino
+
+## Testing
+On windows, I recommend having VS2019 Community Edition, and Ninja installed
+
+Run the vcvars64.bat (usually located in `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxillary\Build\vcvars64.bat`)
+
+`cd tests`
+
+`mkdir build`
+
+`cd build`
+
+`cmake -G Ninja ..`
+
+`ninja && ctest . --verbose`
