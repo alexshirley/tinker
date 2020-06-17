@@ -86,6 +86,27 @@ TEST cvector_resize_test() {
     PASS();
 }
 
+TEST cvector_resize_realloc() {
+    char* block     = malloc(1000);
+    int needed_size = cvector_required_size(sizeof(uint32_t), 10);
+    cvector_t* hdl;
+    ASSERT_EQ(true, cvector_init(&hdl, block, needed_size, sizeof(uint32_t)));
+    uint32_t testval = 0xdeadbeef;
+    for (int i = 0; i < 10; i++) {
+        ASSERT_EQ(true, cvector_push_back(hdl, &testval));
+    }
+    block = realloc(block, 2000);
+    ASSERT_EQ(true, cvector_resize(&hdl, block, 2000));
+    // // Peek the value we set previously
+    uint32_t peek;
+    ASSERT_EQ(true, cvector_get(hdl, 0, &peek));
+    ASSERT_EQ(0xdeadbeef, peek);
+     peek = 2;
+     ASSERT_EQ(true, cvector_push_back(hdl, &peek));
+     free(block);
+    PASS();
+}
+
 GREATEST_MAIN_DEFS();
 
 int main(int argc, char** argv) {
@@ -95,6 +116,7 @@ int main(int argc, char** argv) {
     RUN_TEST(cvector_pop_test);
     RUN_TEST(cvector_set_test);
     RUN_TEST(cvector_resize_test);
+    RUN_TEST(cvector_resize_realloc);
 
     GREATEST_MAIN_END(); /* display results */
 }

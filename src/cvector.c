@@ -2,9 +2,9 @@
 #include <cvector.h>
 
 typedef struct cvector {
-    uintptr_t capacity;
+    size_t capacity;
     size_t elem_size;
-    void* last_entry;
+    char* last_entry;
     char block[1];
 } cvector_t;
 
