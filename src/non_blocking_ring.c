@@ -40,10 +40,11 @@ uint32_t non_blocking_ring_count(ring_t* __restrict c) {
     if (c->full) {
         return c->capacity;
     }
-    const ptrdiff_t pop_p  = (ptrdiff_t)c->pop_p;
-    const ptrdiff_t push_p = (ptrdiff_t)c->push_p;
-    const ptrdiff_t offset = (push_p - pop_p) / c->element_size;
-    return (offset > 0) ? offset : c->capacity - offset;
+    const ptrdiff_t pop_p       = (ptrdiff_t)c->pop_p;
+    const ptrdiff_t push_p      = (ptrdiff_t)c->push_p;
+    const ptrdiff_t data_offset = (push_p - pop_p);
+    const ptrdiff_t actual_data = (data_offset > 0) ? data_offset : c->capacity * c->element_size - data_offset;
+    return actual_data / c->element_size;
 }
 
 bool non_blocking_ring_empty(ring_t* __restrict c) {
@@ -62,16 +63,20 @@ void non_blocking_ring_clear(ring_t* __restrict c) {
     c->push_p = c->data;
 }
 
-static uintptr_t pointer_inc(uintptr_t ptr, uintptr_t base, uintptr_t limit, size_t elem_size) {
-    return (ptr += elem_size >= limit) ? base : ptr;
+static char* inc_head(ring_t* __restrict c, char* __restrict ptr) {
+    const size_t cStructSize  = c->element_size;
+    const size_t cNumElements = c->capacity;
+    const uintptr_t payload   = (uintptr_t)c->data;
+    const uintptr_t max       = (uintptr_t)(payload + cNumElements * cStructSize);
+    return ((uintptr_t)(ptr + cStructSize) >= max) ? (char*)payload : (char*)(ptr + cStructSize);
 }
 
 bool non_blocking_ring_push(ring_t* __restrict c, const void* __restrict pData) {
     memcpy(c->push_p, pData, c->element_size);
-    uintptr_t max_address = (uintptr_t)c->data + c->element_size * c->capacity;
-    if (c->full)
-        c->pop_p = (char*)pointer_inc((ptrdiff_t)c->pop_p, (ptrdiff_t)c->data, max_address, c->element_size);
-    c->push_p = (char*)pointer_inc((ptrdiff_t)c->push_p, (ptrdiff_t)c->data, max_address, c->element_size);
+    if (c->full) {
+        c->pop_p = (char*)inc_head(c, c->pop_p);
+    }
+    c->push_p = (char*)inc_head(c, c->push_p);
     c->full   = (c->pop_p == c->push_p);
     return true; // We return true, because this can never fail, however comm buffering should fail
 }
@@ -82,7 +87,6 @@ bool non_blocking_ring_pop(ring_t* __restrict c, void* __restrict pData) {
     }
     c->full = false;
     memcpy(pData, c->pop_p, c->element_size);
-    uintptr_t max_address = (uintptr_t)c->data + c->element_size * c->capacity;
-    c->pop_p              = (char*)pointer_inc((uintptr_t)c->pop_p, (uintptr_t)c->data, max_address, c->element_size);
+    c->pop_p = (char*)inc_head(c, c->pop_p);
     return true;
 }
