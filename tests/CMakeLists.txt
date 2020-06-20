@@ -38,5 +38,5 @@ if (WIN32)
 endif()
 
 add_subdirectory(cvector)
-
+add_subdirectory(ring)
 
