@@ -12,7 +12,7 @@ TEST non_blocking_ring_creation_test(void* closure) {
     init_closure* args  = (init_closure*)closure;
     uint32_t alloc_size = non_blocking_ring_required_size(args->element_size, args->element_count);
     char* block         = malloc(alloc_size);
-    ring_t* hdl;
+    non_blocking_ring_t* hdl;
     non_blocking_ring_init(&hdl, block, alloc_size, args->element_size);
     ASSERT_EQ(args->element_count, (int)non_blocking_ring_capacity(hdl));
     ASSERT_EQ(true, non_blocking_ring_empty(hdl));
@@ -22,7 +22,7 @@ TEST non_blocking_ring_creation_test(void* closure) {
 }
 
 typedef struct {
-    ring_t* hdl;
+    non_blocking_ring_t* hdl;
 } non_block_closure;
 
 void non_blocking_test_setup(void* closure) {
@@ -39,7 +39,7 @@ void non_blocking_tear_down(void* closure) {
 
 TEST non_blocking_ring_push_test(void* closure) {
     non_block_closure* args = (non_block_closure*)closure;
-    ring_t* hdl             = args->hdl;
+    non_blocking_ring_t* hdl             = args->hdl;
     uint16_t random_data    = 1024;
     ASSERT_EQ(true, non_blocking_ring_push(hdl, &random_data));
     ASSERT_EQ(false, non_blocking_ring_empty(hdl));
@@ -50,7 +50,7 @@ TEST non_blocking_ring_push_test(void* closure) {
 
 TEST non_blocking_ring_push_full_test(void* closure) {
     non_block_closure* args = (non_block_closure*)closure;
-    ring_t* hdl             = args->hdl;
+    non_blocking_ring_t* hdl             = args->hdl;
     for (int i = 0; i < 10; i++) {
         const uint16_t random_data = i * 7 % 29;
         ASSERT_EQ(true, non_blocking_ring_push(hdl, &random_data));
@@ -61,7 +61,7 @@ TEST non_blocking_ring_push_full_test(void* closure) {
 
 TEST non_blocking_ring_pop_ret_test(void* closure) {
     non_block_closure* args = (non_block_closure*)closure;
-    ring_t* hdl             = args->hdl;
+    non_blocking_ring_t* hdl             = args->hdl;
     uint16_t data = 257;
     (void)non_blocking_ring_push(hdl,&data);
     uint16_t ret;
@@ -72,7 +72,7 @@ TEST non_blocking_ring_pop_ret_test(void* closure) {
 
 TEST non_blocking_ring_pop_ret_fail_test(void* closure) {
     non_block_closure* args = (non_block_closure*)closure;
-    ring_t* hdl             = args->hdl;
+    non_blocking_ring_t* hdl             = args->hdl;
     uint16_t ret;
     ASSERT_EQ(false,non_blocking_ring_pop(hdl,&ret));
     PASS();
@@ -80,7 +80,7 @@ TEST non_blocking_ring_pop_ret_fail_test(void* closure) {
 
 TEST non_blocking_index_test(void* closure){
         non_block_closure* args = (non_block_closure*)closure;
-    ring_t* hdl             = args->hdl;
+    non_blocking_ring_t* hdl             = args->hdl;
     ASSERT_EQ(NULL, non_blocking_ring_index(hdl, 1));
     for (uint16_t i = 0; i < 10; i++){
         non_blocking_ring_push(hdl,&i);
