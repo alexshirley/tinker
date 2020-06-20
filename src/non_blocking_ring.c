@@ -1,4 +1,4 @@
-#include <ring.h>
+#include <non_blocking_ring.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -11,11 +11,11 @@ typedef struct ring {
     char data[1];
 } ring_t;
 
-unsigned long ring_required_size(unsigned long element_size, unsigned long number_elements) {
+unsigned long non_blocking_ring_required_size(unsigned long element_size, unsigned long number_elements) {
     return offsetof(ring_t, data) + (element_size * number_elements);
 }
 
-bool ring_init(ring_t** __restrict c, char* block, size_t block_size, size_t element_size) {
+bool non_blocking_ring_init(ring_t** __restrict c, char* block, size_t block_size, size_t element_size) {
     if (block_size < offsetof(ring_t, data)) {
         return false;
     }
@@ -32,11 +32,11 @@ bool ring_init(ring_t** __restrict c, char* block, size_t block_size, size_t ele
     return true;
 }
 
-uint32_t ring_capacity(ring_t* __restrict c) {
+uint32_t non_blocking_ring_capacity(ring_t* __restrict c) {
     return c->capacity;
 }
 
-uint32_t ring_count(ring_t* __restrict c) {
+uint32_t non_blocking_ring_count(ring_t* __restrict c) {
     if (c->full) {
         return c->capacity;
     }
@@ -46,17 +46,17 @@ uint32_t ring_count(ring_t* __restrict c) {
     return (offset > 0) ? offset : c->capacity - offset;
 }
 
-bool ring_empty(ring_t* __restrict c) {
+bool non_blocking_ring_empty(ring_t* __restrict c) {
     const ptrdiff_t pop_p  = (ptrdiff_t)c->pop_p;
     const ptrdiff_t push_p = (ptrdiff_t)c->push_p;
     return (push_p == pop_p && !c->full);
 }
 
-bool ring_full(ring_t* __restrict c) {
+bool non_blocking_ring_full(ring_t* __restrict c) {
     return c->full;
 }
 
-void ring_clear(ring_t* __restrict c) {
+void non_blocking_ring_clear(ring_t* __restrict c) {
     c->full   = false;
     c->pop_p  = c->data;
     c->push_p = c->data;
@@ -66,7 +66,7 @@ static uintptr_t pointer_inc(uintptr_t ptr, uintptr_t base, uintptr_t limit, siz
     return (ptr += elem_size >= limit) ? base : ptr;
 }
 
-bool ring_push(ring_t* __restrict c, const void* __restrict pData) {
+bool non_blocking_ring_push(ring_t* __restrict c, const void* __restrict pData) {
     memcpy(c->push_p, pData, c->element_size);
     uintptr_t max_address = (uintptr_t)c->data + c->element_size * c->capacity;
     if (c->full)
@@ -76,8 +76,8 @@ bool ring_push(ring_t* __restrict c, const void* __restrict pData) {
     return true; // We return true, because this can never fail, however comm buffering should fail
 }
 
-bool ring_pop(ring_t* __restrict c, void* __restrict pData) {
-    if (ring_empty(c)) {
+bool non_blocking_ring_pop(ring_t* __restrict c, void* __restrict pData) {
+    if (non_blocking_ring_empty(c)) {
         return false;
     }
     c->full = false;

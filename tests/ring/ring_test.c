@@ -1,21 +1,18 @@
-#include <ring.h>
+#include <non_blocking_ring.h>
 #include <greatest.h>
 
 TEST dummy_test() {
     PASS();
 }
 
-TEST ring_creation_test(){
-    uint32_t alloc_size = ring_required_size(sizeof(uint16_t),8);
+TEST non_blocking_ring_creation_test(){
+    uint32_t alloc_size = non_blocking_ring_required_size(sizeof(uint16_t),8);
     char * block = malloc(alloc_size);
     ring_t * hdl;
-    ring_init(&hdl, block, alloc_size, sizeof(uint16_t));
-    ASSERT_EQ(true, ring_empty(hdl));
-    ASSERT_FALSE(ring_full(hdl));
-    for (uint16_t i = 0; i < 10; i++){
-        ring_push(hdl,&i);
-    }
-    ASSERT_EQ(true,ring_full(hdl));
+    non_blocking_ring_init(&hdl, block, alloc_size, sizeof(uint16_t));
+    ASSERT_EQ(true, non_blocking_ring_empty(hdl));
+    ASSERT_FALSE(non_blocking_ring_full(hdl));
+    free(block);
     PASS();
 }
 
