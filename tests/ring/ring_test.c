@@ -78,6 +78,24 @@ TEST non_blocking_ring_pop_ret_fail_test(void* closure) {
     PASS();
 }
 
+TEST non_blocking_index_test(void* closure){
+        non_block_closure* args = (non_block_closure*)closure;
+    ring_t* hdl             = args->hdl;
+    ASSERT_EQ(NULL, non_blocking_ring_index(hdl, 1));
+    for (uint16_t i = 0; i < 10; i++){
+        non_blocking_ring_push(hdl,&i);
+    }
+    ASSERT_EQ(NULL, non_blocking_ring_index(hdl,10));
+
+    for (uint16_t i = 0; i<10;i++){
+        uint16_t * retP = (uint16_t*)non_blocking_ring_index(hdl,i);
+        ASSERT(retP != NULL);
+        ASSERT_EQ(i,*retP);
+    }
+    PASS();
+
+}
+
 SUITE(non_blocking_ring_suite) {
     int element_sizes[]  = {1, 2, 4, 8, 17};    // Common Sizes of elements + one odd size to simulate struct
     int element_counts[] = {1, 2, 4, 16, 1024}; // Common Buffer Element Capacities
@@ -94,6 +112,7 @@ SUITE(non_blocking_ring_suite) {
     RUN_TESTp(non_blocking_ring_push_full_test, &args);
     RUN_TESTp(non_blocking_ring_pop_ret_test, &args);
     RUN_TESTp(non_blocking_ring_pop_ret_fail_test, &args);
+    RUN_TESTp(non_blocking_index_test, &args);
 }
 
 GREATEST_MAIN_DEFS();

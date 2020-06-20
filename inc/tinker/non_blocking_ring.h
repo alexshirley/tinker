@@ -19,6 +19,7 @@ bool non_blocking_ring_push(ring_t* __restrict c, const void* __restrict pData);
 void non_blocking_ring_clear(ring_t* __restrict Fifo);
 bool non_blocking_ring_full(ring_t* __restrict c);
 uint32_t non_blocking_ring_capacity(ring_t* __restrict c);
+void * non_blocking_ring_index(ring_t* __restrict c, uint32_t index);
 
 #ifdef __cplusplus
 } // extern C

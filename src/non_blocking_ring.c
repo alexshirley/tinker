@@ -90,3 +90,16 @@ bool non_blocking_ring_pop(ring_t* __restrict c, void* __restrict pData) {
     c->pop_p = (char*)inc_head(c, c->pop_p);
     return true;
 }
+
+void* non_blocking_ring_index(ring_t* __restrict c, uint32_t index) {
+    if (non_blocking_ring_empty(c)) {
+        return NULL;
+    }
+    if (non_blocking_ring_count(c) <= index) {
+        return NULL;
+    }
+    const ptrdiff_t max_address = (ptrdiff_t)c->data + c->capacity * c->element_size;
+    ptrdiff_t v_index_address   = (ptrdiff_t)c->pop_p + index * c->element_size;
+    ptrdiff_t offset            = (v_index_address >= max_address) ? v_index_address - max_address + (ptrdiff_t)c->data : v_index_address;
+    return (void*)offset;
+}
