@@ -58,9 +58,8 @@ bool non_blocking_ring_full(non_blocking_ring_t* __restrict c) {
 }
 
 void non_blocking_ring_clear(non_blocking_ring_t* __restrict c) {
-    c->full   = false;
-    c->pop_p  = c->data;
-    c->push_p = c->data;
+    c->full = false;
+    c->pop_p  = c->push_p;
 }
 
 static char* inc_head(non_blocking_ring_t* __restrict c, char* __restrict ptr) {
