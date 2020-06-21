@@ -95,6 +95,21 @@ TEST non_blocking_index_test(void* closure) {
     PASS();
 }
 
+TEST non_blocking_ring_clear_test(void* closure) {
+    non_block_closure* args  = (non_block_closure*)closure;
+    non_blocking_ring_t* hdl = args->hdl;
+    for (int i = 0; i < 10; i++) {
+        const uint16_t random_data = i * 7 % 29;
+        non_blocking_ring_push(hdl, &random_data);
+    }
+
+    non_blocking_ring_clear(hdl);
+    ASSERT_EQ(true, non_blocking_ring_empty(hdl));
+    ASSERT_EQ(false, non_blocking_ring_full(hdl));
+    int throwaway;
+    ASSERT_EQ(false, non_blocking_ring_pop(hdl, &throwaway));
+
+    PASS();
 }
 
 SUITE(non_blocking_ring_suite) {
@@ -114,6 +129,7 @@ SUITE(non_blocking_ring_suite) {
     RUN_TESTp(non_blocking_ring_pop_ret_test, &args);
     RUN_TESTp(non_blocking_ring_pop_ret_fail_test, &args);
     RUN_TESTp(non_blocking_index_test, &args);
+    RUN_TESTp(non_blocking_ring_clear_test, &args);
 }
 
 GREATEST_MAIN_DEFS();
