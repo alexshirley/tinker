@@ -38,9 +38,9 @@ void non_blocking_tear_down(void* closure) {
 }
 
 TEST non_blocking_ring_push_test(void* closure) {
-    non_block_closure* args = (non_block_closure*)closure;
-    non_blocking_ring_t* hdl             = args->hdl;
-    uint16_t random_data    = 1024;
+    non_block_closure* args  = (non_block_closure*)closure;
+    non_blocking_ring_t* hdl = args->hdl;
+    uint16_t random_data     = 1024;
     ASSERT_EQ(true, non_blocking_ring_push(hdl, &random_data));
     ASSERT_EQ(false, non_blocking_ring_empty(hdl));
     ASSERT_EQ(false, non_blocking_ring_full(hdl));
@@ -49,8 +49,8 @@ TEST non_blocking_ring_push_test(void* closure) {
 }
 
 TEST non_blocking_ring_push_full_test(void* closure) {
-    non_block_closure* args = (non_block_closure*)closure;
-    non_blocking_ring_t* hdl             = args->hdl;
+    non_block_closure* args  = (non_block_closure*)closure;
+    non_blocking_ring_t* hdl = args->hdl;
     for (int i = 0; i < 10; i++) {
         const uint16_t random_data = i * 7 % 29;
         ASSERT_EQ(true, non_blocking_ring_push(hdl, &random_data));
@@ -60,39 +60,40 @@ TEST non_blocking_ring_push_full_test(void* closure) {
 }
 
 TEST non_blocking_ring_pop_ret_test(void* closure) {
-    non_block_closure* args = (non_block_closure*)closure;
-    non_blocking_ring_t* hdl             = args->hdl;
-    uint16_t data = 257;
-    (void)non_blocking_ring_push(hdl,&data);
+    non_block_closure* args  = (non_block_closure*)closure;
+    non_blocking_ring_t* hdl = args->hdl;
+    uint16_t data            = 257;
+    (void)non_blocking_ring_push(hdl, &data);
     uint16_t ret;
-    ASSERT_EQ(true,non_blocking_ring_pop(hdl,&ret));
+    ASSERT_EQ(true, non_blocking_ring_pop(hdl, &ret));
     ASSERT_EQ(data, ret);
     PASS();
 }
 
 TEST non_blocking_ring_pop_ret_fail_test(void* closure) {
-    non_block_closure* args = (non_block_closure*)closure;
-    non_blocking_ring_t* hdl             = args->hdl;
+    non_block_closure* args  = (non_block_closure*)closure;
+    non_blocking_ring_t* hdl = args->hdl;
     uint16_t ret;
-    ASSERT_EQ(false,non_blocking_ring_pop(hdl,&ret));
+    ASSERT_EQ(false, non_blocking_ring_pop(hdl, &ret));
     PASS();
 }
 
-TEST non_blocking_index_test(void* closure){
-        non_block_closure* args = (non_block_closure*)closure;
-    non_blocking_ring_t* hdl             = args->hdl;
+TEST non_blocking_index_test(void* closure) {
+    non_block_closure* args  = (non_block_closure*)closure;
+    non_blocking_ring_t* hdl = args->hdl;
     ASSERT_EQ(NULL, non_blocking_ring_index(hdl, 1));
-    for (uint16_t i = 0; i < 10; i++){
-        non_blocking_ring_push(hdl,&i);
+    for (uint16_t i = 0; i < 10; i++) {
+        non_blocking_ring_push(hdl, &i);
     }
-    ASSERT_EQ(NULL, non_blocking_ring_index(hdl,10));
+    ASSERT_EQ(NULL, non_blocking_ring_index(hdl, 10));
 
-    for (uint16_t i = 0; i<10;i++){
-        uint16_t * retP = (uint16_t*)non_blocking_ring_index(hdl,i);
+    for (uint16_t i = 0; i < 10; i++) {
+        uint16_t* retP = (uint16_t*)non_blocking_ring_index(hdl, i);
         ASSERT(retP != NULL);
-        ASSERT_EQ(i,*retP);
+        ASSERT_EQ(i, *retP);
     }
     PASS();
+}
 
 }
 
