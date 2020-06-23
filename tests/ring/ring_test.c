@@ -4,6 +4,7 @@
 
 SUITE_EXTERN(non_blocking_ring_suite);
 SUITE_EXTERN(dsp_ring_suite);
+SUITE_EXTERN(blocking_ring_suite);
 
 GREATEST_MAIN_DEFS();
 
@@ -12,6 +13,7 @@ int main(int argc, char** argv) {
     /* If tests are run outside of a suite, a default suite is used. */
     RUN_SUITE(non_blocking_ring_suite);
     RUN_SUITE(dsp_ring_suite);
+    RUN_SUITE(blocking_ring_suite);
 
     GREATEST_MAIN_END(); /* display results */
 }
