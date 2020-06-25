@@ -29,7 +29,7 @@ bool cvector_resize(cvector_t** vec, char* block, unsigned long block_size) {
         return false;
     }
     memmove(block, (*vec), block_size);
-    *vec = (cvector_t*)block;
+    *vec             = (cvector_t*)block;
     (*vec)->capacity = block_size - offsetof(cvector_t, block);
     return true;
 }
@@ -57,30 +57,20 @@ bool cvector_pop_back(cvector_t* vec, void* value) {
 }
 
 bool cvector_get(cvector_t* vec, unsigned long element_index, void* value) {
-    uintptr_t base_address  = (uintptr_t)vec->block;
-    uintptr_t offset        = vec->elem_size * element_index;
-    uintptr_t index_address = base_address + offset;
-    if (index_address >= vec->capacity + (uintptr_t)vec->block) {
+    void* address = cvector_get_ref(vec, element_index);
+    if (address == NULL) {
         return false;
     }
-    if (index_address >= (uintptr_t)vec->last_entry) {
-        return false;
-    }
-    memcpy(value, (void*)index_address, vec->elem_size);
+    memcpy(value, (void*)address, vec->elem_size);
     return true;
 }
 
 bool cvector_set(cvector_t* vec, unsigned long element_index, void* value) {
-    uintptr_t base_address  = (uintptr_t)vec->block;
-    uintptr_t offset        = vec->elem_size * element_index;
-    uintptr_t index_address = base_address + offset;
-    if (index_address >= vec->capacity + (uintptr_t)vec->block) {
+    void* address = cvector_get_ref(vec, element_index);
+    if (address == NULL) {
         return false;
     }
-    if (index_address >= (uintptr_t)vec->last_entry) {
-        return false;
-    }
-    memcpy((void*)index_address, value, vec->elem_size);
+    memcpy((void*)address, value, vec->elem_size);
     return true;
 }
 
@@ -99,4 +89,17 @@ bool cvector_reserve(cvector_t* vec, size_t number_of_elements) {
     }
     vec->last_entry = (void*)new_last_entry;
     return true;
+}
+
+void* cvector_get_ref(cvector_t* vec, unsigned long element_index) {
+    uintptr_t base_address  = (uintptr_t)vec->block;
+    uintptr_t offset        = vec->elem_size * element_index;
+    uintptr_t index_address = base_address + offset;
+    if (index_address >= vec->capacity + (uintptr_t)vec->block) {
+        return NULL;
+    }
+    if (index_address >= (uintptr_t)vec->last_entry) {
+        return NULL;
+    }
+    return (void*)index_address;
 }
