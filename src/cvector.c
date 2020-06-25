@@ -103,3 +103,7 @@ void* cvector_get_ref(cvector_t* vec, unsigned long element_index) {
     }
     return (void*)index_address;
 }
+
+size_t cvector_element_size(cvector_t* v) {
+    return v->elem_size;
+}

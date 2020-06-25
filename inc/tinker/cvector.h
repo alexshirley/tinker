@@ -24,6 +24,7 @@ bool cvector_is_empty(cvector_t* vec);
 int cvector_capacity(cvector_t* vec);
 bool cvector_reserve(cvector_t* vec, size_t number_of_elements);
 void* cvector_get_ref(cvector_t* vec, unsigned long element_index);
+size_t cvector_element_size(cvector_t* v);
 
 #ifdef __cplusplus
 } // extern "C"
