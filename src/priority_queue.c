@@ -10,7 +10,7 @@ typedef struct prio_q {
 } prio_q_t;
 
 bool prio_q_peek(prio_q_t* __restrict p, void* out) {
-    return cvector_get(p->heap, 0, &out);
+    return cvector_get(p->heap, 0, out);
 }
 
 size_t prio_q_required_size(unsigned long element_size, unsigned long number_elements) {
@@ -34,14 +34,14 @@ bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned l
 static void siftUp(prio_q_t* q, int currentIdx) {
     int parentIdx           = (currentIdx - 1) / 2;
     cvector_t* __restrict h = q->heap;
-    void* current_addy      = cvector_get_ref(h, currentIdx);
-    void* parent_addy       = cvector_get_ref(h, parentIdx);
-    while (currentIdx > 0 && q->func(current_addy, parent_addy)) {
-        swap(current_addy, parent_addy, cvector_element_size(h));
-        currentIdx   = parentIdx;
-        parentIdx    = (currentIdx - 1) / 2;
-        current_addy = cvector_get_ref(h, currentIdx);
-        parent_addy  = cvector_get_ref(h, parentIdx);
+    void* current_ref       = cvector_get_ref(h, currentIdx);
+    void* parent_ref        = cvector_get_ref(h, parentIdx);
+    while (currentIdx > 0 && q->func(current_ref, parent_ref) < 0) {
+        swap(current_ref, parent_ref, cvector_element_size(h));
+        currentIdx  = parentIdx;
+        parentIdx   = (currentIdx - 1) / 2;
+        current_ref = cvector_get_ref(h, currentIdx);
+        parent_ref  = cvector_get_ref(h, parentIdx);
     }
 }
 

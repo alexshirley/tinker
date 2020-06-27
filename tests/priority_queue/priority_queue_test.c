@@ -1,27 +1,42 @@
 #include <priority_queue.h>
 #include <greatest.h>
 
-TEST pass_test(){
-    PASS();
+int pq_comp_min(const void* a, const void* b) {
+    int val1 = *(int*)a;
+    int val2 = *(int*)b;
+    return (val1 - val2);
 }
 
-int pq_comp_min(const void * a, const void * b){
-    int* val1 = (int*)a;
-    int* val2 = (int*)b;
-    return (val1 < val2) - (val2 > val1);
-}
-
-TEST pq_creation_test(){
+TEST pq_creation_test() {
     char buf[1000];
     prio_q_t* hdl;
-    ASSERT_EQ(true, prio_q_init(&hdl,buf,1000,sizeof(int),pq_comp_min));
+    ASSERT_EQ(true, prio_q_init(&hdl, buf, 1000, sizeof(int), pq_comp_min));
     int trash;
     ASSERT_EQ(false, prio_q_peek(hdl, &trash));
     PASS();
 }
 
-TEST pq_insert_test(){
+TEST pq_insert_test() {
+    char buf[1000];
+    prio_q_t* hdl;
+    ASSERT_EQ(true, prio_q_init(&hdl, buf, 1000, sizeof(int), pq_comp_min));
+    int trash;
+    ASSERT_EQ(false, prio_q_peek(hdl, &trash));
 
+    int test[] = {34, 23, 45};
+    ASSERT_EQ(true, prio_q_insert(hdl, &test[0])); // Insert 34
+    ASSERT_EQ(true, prio_q_peek(hdl, &trash));
+    ASSERT_EQ_FMTm("Should be equal", test[0], trash, "%d"); // Expect 34
+
+    ASSERT_EQ(true, prio_q_insert(hdl, &test[1])); // Add 23
+    ASSERT_EQ(true, prio_q_peek(hdl, &trash));
+    ASSERT_EQ_FMTm("Should be equal", test[1], trash, "%d"); // Expect 23
+
+    ASSERT_EQ(true, prio_q_insert(hdl, &test[2])); // Add 45
+    ASSERT_EQ(true, prio_q_peek(hdl, &trash));
+    ASSERT_EQ_FMTm("Should be equal", test[1], trash, "%d"); // Expect 23
+
+    PASS();
 }
 
 GREATEST_MAIN_DEFS();
@@ -31,6 +46,7 @@ int main(int argc, char** argv) {
     /* If tests are run outside of a suite, a default suite is used. */
     RUN_TEST(pass_test);
     RUN_TEST(pq_creation_test);
+    RUN_TEST(pq_insert_test);
 
     GREATEST_MAIN_END(); /* display results */
 }
