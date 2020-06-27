@@ -46,13 +46,14 @@ bool cvector_push_back(cvector_t* vec, const void* value) {
 }
 
 bool cvector_pop_back(cvector_t* vec, void* value) {
-    uintptr_t last_entry = (uintptr_t)vec->last_entry;
-    if (last_entry == (uintptr_t)vec->block) {
+    const size_t num_elements = cvector_size(vec);
+    if (!num_elements) {
         return false;
     }
-    memcpy(value, vec->last_entry, vec->elem_size);
-    uintptr_t next_entry = (uintptr_t)vec->last_entry - vec->elem_size;
-    vec->last_entry      = (void*)next_entry;
+    unsigned long element_index = num_elements - 1;
+    void* address               = cvector_get_ref(vec, element_index);
+    memcpy(value, address, vec->elem_size);
+    vec->last_entry -= vec->elem_size;
     return true;
 }
 

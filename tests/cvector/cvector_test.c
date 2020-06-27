@@ -37,9 +37,10 @@ TEST cvector_pop_test() {
         ASSERT_EQ(true, cvector_push_back(cvec_hdl, &i));
     }
     ASSERT_FALSE(cvector_is_empty(cvec_hdl));
-    while (!cvector_is_empty(cvec_hdl)) {
+    for (int i = 9; i != -1; i--) {
         int temp;
-        cvector_pop_back(cvec_hdl, &temp);
+        ASSERT_EQ(true, cvector_pop_back(cvec_hdl, &temp));
+        ASSERT_EQ_FMT(i, temp, "%d");
     }
     ASSERT_EQ(true, cvector_is_empty(cvec_hdl));
     free(cvec_buff);
