@@ -17,14 +17,18 @@ size_t prio_q_required_size(unsigned long element_size, unsigned long number_ele
     return sizeof(prio_q_t) + cvector_required_size(element_size, number_elements);
 }
 
-bool prio_q_init(prio_q_t** p, char* block, unsigned long size, unsigned long element_size, compare func) {
-    if (size < prio_q_required_size(0, 0)) {
+bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned long element_size, compare func) {
+    if (block_size < prio_q_required_size(0, 0)) {
         return false;
     }
     (*p)       = (prio_q_t*)&block[0];
     (*p)->func = func;
-    (*p)->heap = (cvector_t*)&block[sizeof(prio_q_t)];
-    return cvector_init(&(*p)->heap, &block[sizeof(prio_q_t)], size, element_size);
+    cvector_t* vec;
+    if (!cvector_init(&vec, block + sizeof(prio_q_t), block_size - sizeof(prio_q_t), element_size)) {
+        return false;
+    }
+    (*p)->heap = vec;
+    return true;
 }
 
 static void siftUp(prio_q_t* q, int currentIdx) {
