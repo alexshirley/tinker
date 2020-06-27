@@ -120,6 +120,38 @@ TEST cvector_size_test() {
     PASS();
 }
 
+static void swap(void* __restrict a, void* __restrict b, size_t len) {
+    char* __restrict p = (char*)a;
+    char* __restrict q = (char*)b;
+    while (len--) {
+        char tmp = *p;
+        *p++     = *q;
+        *q++     = tmp;
+    };
+}
+
+TEST cvector_swap_ref_test() {
+    char block[1000];
+    cvector_t* hdl;
+    ASSERT_EQ(true, cvector_init(&hdl, block, 1000, sizeof(int)));
+
+    for (int i = 0; i < 10; i++) {
+        cvector_push_back(hdl, &i);
+    }
+
+    for (int i = 0; i < 5; i++) {
+        swap(cvector_get_ref(hdl, i), cvector_get_ref(hdl, 10 - i - 1), sizeof(int));
+    }
+
+    for (int i = 0; i < 10; i++) {
+        int trash;
+        cvector_get(hdl, i, &trash);
+        ASSERT_EQ_FMTm("Should be equal", 10 - i - 1, trash, "%d");
+    }
+
+    PASS();
+}
+
 GREATEST_MAIN_DEFS();
 
 int main(int argc, char** argv) {
@@ -131,6 +163,7 @@ int main(int argc, char** argv) {
     RUN_TEST(cvector_resize_test);
     RUN_TEST(cvector_resize_realloc);
     RUN_TEST(cvector_size_test);
+    RUN_TEST(cvector_swap_ref_test);
 
     GREATEST_MAIN_END(); /* display results */
 }

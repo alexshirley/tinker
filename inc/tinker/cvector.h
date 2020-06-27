@@ -14,7 +14,7 @@ cvector is a rough replacment for std::vector in C++, supporting basic functions
 typedef struct cvector cvector_t;
 
 unsigned long cvector_required_size(unsigned long element_size, unsigned long number_elements);
-bool cvector_init(cvector_t** vec, char* block, unsigned long size, unsigned long element_size);
+bool cvector_init(cvector_t** vec, char* block, unsigned long block_size, unsigned long element_size);
 bool cvector_resize(cvector_t** vec, char* block, unsigned long block_size);
 bool cvector_push_back(cvector_t* vec, const void* value);
 bool cvector_pop_back(cvector_t* vec, void* value);
