@@ -107,6 +107,19 @@ TEST cvector_resize_realloc() {
     PASS();
 }
 
+TEST cvector_size_test() {
+    char* block     = malloc(1000);
+    int needed_size = cvector_required_size(sizeof(uint32_t), 10);
+    cvector_t* hdl;
+    ASSERT_EQ(true, cvector_init(&hdl, block, needed_size, sizeof(uint32_t)));
+    ASSERT_EQ(0, cvector_size(hdl));
+    for (int i = 0; i < 5; i++) {
+        ASSERT_EQ(true, cvector_push_back(hdl, &i));
+    }
+    ASSERT_EQ(5, cvector_size(hdl));
+    PASS();
+}
+
 GREATEST_MAIN_DEFS();
 
 int main(int argc, char** argv) {
@@ -117,6 +130,7 @@ int main(int argc, char** argv) {
     RUN_TEST(cvector_set_test);
     RUN_TEST(cvector_resize_test);
     RUN_TEST(cvector_resize_realloc);
+    RUN_TEST(cvector_size_test);
 
     GREATEST_MAIN_END(); /* display results */
 }
