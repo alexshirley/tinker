@@ -3,6 +3,7 @@
 #include <string.h>
 
 static void swap(void* __restrict a, void* __restrict b, size_t len);
+static void siftDown(prio_q_t* q, int currentIdx, int endIdx);
 static int childL_idx(int parent) {
     return parent * 2 + 1;
 }
@@ -40,6 +41,15 @@ bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned l
     }
     (*p)->heap = vec;
     return true;
+}
+
+void prio_q_create_from_cvec(prio_q_t** p, char block[16], cvector_t* vec, compare func) {
+    (*p)       = (prio_q_t*)&block[0];
+    (*p)->func = func;
+    (*p)->heap = vec;
+    for (int currentIdx = parent_idx(cvector_size(vec) - 1); currentIdx >= 0; currentIdx--) {
+        siftDown((*p), currentIdx, cvector_size(vec) - 1);
+    }
 }
 
 static void siftUp(prio_q_t* q, int currentIdx) {

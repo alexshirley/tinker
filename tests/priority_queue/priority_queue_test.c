@@ -16,6 +16,29 @@ TEST pq_creation_test() {
     PASS();
 }
 
+TEST pq_create_from_vec_test(){
+    // populate a cvector
+    cvector_t * vhdl;
+    char buf[1000];
+    cvector_init(&vhdl, buf, 1000, sizeof(int));
+    int rand = 2000;
+    while (cvector_push_back(vhdl, &(rand))){
+        rand--;
+    }
+    int first_element;
+    cvector_get(vhdl,0,&first_element);
+
+    ASSERT_EQ_FMT(2000,first_element,"%d");
+    // Let's create a priority queue
+    char pq_header[16];
+    prio_q_t * UUT;
+    prio_q_create_from_cvec(&UUT,pq_header,vhdl,pq_comp_min);
+    cvector_get(vhdl,0,&first_element);
+    ASSERT_EQ_FMT(1757,first_element,"%d");
+
+    PASS();
+}
+
 TEST pq_insert_test() {
     char buf[1000];
     prio_q_t* hdl;
@@ -68,6 +91,7 @@ int main(int argc, char** argv) {
     RUN_TEST(pq_creation_test);
     RUN_TEST(pq_insert_test);
     RUN_TEST(pq_pop_test);
+    RUN_TEST(pq_create_from_vec_test);
 
     GREATEST_MAIN_END(); /* display results */
 }
