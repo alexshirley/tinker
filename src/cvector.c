@@ -24,7 +24,7 @@ bool cvector_init(cvector_t** vec, char* buffer, unsigned long block_size, unsig
     return true;
 }
 
-bool cvector_resize(cvector_t** vec, char* block, unsigned long block_size) {
+bool cvector_resize(cvector_t** vec, char* __restrict block, unsigned long block_size) {
     if (block_size < offsetof(cvector_t, block) + (*vec)->capacity) {
         return false;
     }
@@ -34,7 +34,7 @@ bool cvector_resize(cvector_t** vec, char* block, unsigned long block_size) {
     return true;
 }
 
-bool cvector_push_back(cvector_t* vec, const void* value) {
+bool cvector_push_back(cvector_t* __restrict vec, const void* __restrict value) {
     uintptr_t base_address = (uintptr_t)vec->last_entry;
     if (base_address >= vec->capacity + (uintptr_t)vec->block) {
         return false;
@@ -45,7 +45,7 @@ bool cvector_push_back(cvector_t* vec, const void* value) {
     return true;
 }
 
-bool cvector_pop_back(cvector_t* vec, void* value) {
+bool cvector_pop_back(cvector_t* __restrict vec, void* __restrict value) {
     const size_t num_elements = cvector_size(vec);
     if (!num_elements) {
         return false;
@@ -57,8 +57,8 @@ bool cvector_pop_back(cvector_t* vec, void* value) {
     return true;
 }
 
-bool cvector_get(cvector_t* vec, unsigned long element_index, void* value) {
-    void* address = cvector_get_ref(vec, element_index);
+bool cvector_get(const cvector_t* vec, unsigned long element_index, void* value) {
+    const void* address = cvector_get_ref(vec, element_index);
     if (address == NULL) {
         return false;
     }
@@ -66,7 +66,7 @@ bool cvector_get(cvector_t* vec, unsigned long element_index, void* value) {
     return true;
 }
 
-bool cvector_set(cvector_t* vec, unsigned long element_index, void* value) {
+bool cvector_set(cvector_t* vec, unsigned long element_index, const void* value) {
     void* address = cvector_get_ref(vec, element_index);
     if (address == NULL) {
         return false;
@@ -75,11 +75,11 @@ bool cvector_set(cvector_t* vec, unsigned long element_index, void* value) {
     return true;
 }
 
-bool cvector_is_empty(cvector_t* vec) {
+bool cvector_is_empty(const cvector_t* vec) {
     return vec->last_entry == (void*)vec->block;
 }
 
-int cvector_capacity(cvector_t* vec) {
+int cvector_capacity(const cvector_t* vec) {
     return vec->capacity / vec->elem_size;
 }
 
@@ -92,7 +92,7 @@ bool cvector_reserve(cvector_t* vec, size_t number_of_elements) {
     return true;
 }
 
-void* cvector_get_ref(cvector_t* vec, unsigned long element_index) {
+void* cvector_get_ref(const cvector_t* vec, unsigned long element_index) {
     uintptr_t base_address  = (uintptr_t)vec->block;
     uintptr_t offset        = vec->elem_size * element_index;
     uintptr_t index_address = base_address + offset;
@@ -105,10 +105,10 @@ void* cvector_get_ref(cvector_t* vec, unsigned long element_index) {
     return (void*)index_address;
 }
 
-size_t cvector_element_size(cvector_t* v) {
+size_t cvector_element_size(const cvector_t* v) {
     return v->elem_size;
 }
 
-size_t cvector_size(cvector_t* v) {
+size_t cvector_size(const cvector_t* v) {
     return (v->last_entry - v->block) / v->elem_size;
 }
