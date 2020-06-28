@@ -56,7 +56,7 @@ static void siftUp(prio_q_t* q, int currentIdx) {
     }
 }
 
-bool prio_q_insert(prio_q_t* q, void* value) {
+bool prio_q_push(prio_q_t* q, const void* value) {
     if (false == cvector_push_back(q->heap, value)) {
         return false;
     }
@@ -92,7 +92,7 @@ static void siftDown(prio_q_t* q, int currentIdx, int endIdx) {
     }
 }
 
-bool prio_q_remove(prio_q_t* q, void* value) {
+bool prio_q_pop(prio_q_t* q, void* value) {
     cvector_t* __restrict h = q->heap;
     const size_t h_size     = cvector_size(h);
     if (!h_size) { // if we have no elements, early terminate

@@ -24,15 +24,15 @@ TEST pq_insert_test() {
     ASSERT_EQ(false, prio_q_peek(hdl, &trash));
 
     int test[] = {34, 23, 45};
-    ASSERT_EQ(true, prio_q_insert(hdl, &test[0])); // Insert 34
+    ASSERT_EQ(true, prio_q_push(hdl, &test[0])); // Insert 34
     ASSERT_EQ(true, prio_q_peek(hdl, &trash));
     ASSERT_EQ_FMTm("Should be equal", test[0], trash, "%d"); // Expect 34
 
-    ASSERT_EQ(true, prio_q_insert(hdl, &test[1])); // Add 23
+    ASSERT_EQ(true, prio_q_push(hdl, &test[1])); // Add 23
     ASSERT_EQ(true, prio_q_peek(hdl, &trash));
     ASSERT_EQ_FMTm("Should be equal", test[1], trash, "%d"); // Expect 23
 
-    ASSERT_EQ(true, prio_q_insert(hdl, &test[2])); // Add 45
+    ASSERT_EQ(true, prio_q_push(hdl, &test[2])); // Add 45
     ASSERT_EQ(true, prio_q_peek(hdl, &trash));
     ASSERT_EQ_FMTm("Should be equal", test[1], trash, "%d"); // Expect 23
 
@@ -46,16 +46,16 @@ TEST pq_pop_test() {
 
     int test[] = {17, 199, 8, 8};
     for (int i = 0; i < 4; i++) {
-        (void)prio_q_insert(hdl, &test[i]);
+        (void)prio_q_push(hdl, &test[i]);
     }
     int result;
-    ASSERT_EQ(true, prio_q_remove(hdl, &result));
+    ASSERT_EQ(true, prio_q_pop(hdl, &result));
     ASSERT_EQ_FMT(8, result, "%d");
-    ASSERT_EQ(true, prio_q_remove(hdl, &result));
+    ASSERT_EQ(true, prio_q_pop(hdl, &result));
     ASSERT_EQ_FMT(8, result, "%d");
-    ASSERT_EQ(true, prio_q_remove(hdl, &result));
+    ASSERT_EQ(true, prio_q_pop(hdl, &result));
     ASSERT_EQ_FMT(17, result, "%d");
-    ASSERT_EQ(true, prio_q_remove(hdl, &result));
+    ASSERT_EQ(true, prio_q_pop(hdl, &result));
     ASSERT_EQ_FMT(199, result, "%d");
     PASS();
 }
