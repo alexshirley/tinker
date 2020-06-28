@@ -33,7 +33,9 @@ bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned l
     (*p)       = (prio_q_t*)&block[0];
     (*p)->func = func;
     cvector_t* vec;
-    if (!cvector_init(&vec, block + sizeof(prio_q_t), block_size - sizeof(prio_q_t), element_size)) {
+    const size_t remaining = block_size - sizeof(prio_q_t);
+    if (!cvector_init(&vec, &block[sizeof(prio_q_t)], remaining, element_size)) {
+        (*p) = NULL;
         return false;
     }
     (*p)->heap = vec;
