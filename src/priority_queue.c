@@ -43,14 +43,14 @@ bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned l
 }
 
 static void siftUp(prio_q_t* q, int currentIdx) {
-    int parentIdx           = (currentIdx - 1) / 2;
-    cvector_t* __restrict h = q->heap;
-    void* current_ref       = cvector_get_ref(h, currentIdx);
-    void* parent_ref        = cvector_get_ref(h, parentIdx);
+    cvector_t* __restrict h      = q->heap;
+    int parentIdx                = parent_idx(currentIdx);
+    void* __restrict current_ref = cvector_get_ref(h, currentIdx);
+    void* __restrict parent_ref  = cvector_get_ref(h, parentIdx);
     while (currentIdx > 0 && q->func(current_ref, parent_ref) < 0) {
         swap(current_ref, parent_ref, cvector_element_size(h));
         currentIdx  = parentIdx;
-        parentIdx   = (currentIdx - 1) / 2;
+        parentIdx   = parent_idx(currentIdx);
         current_ref = cvector_get_ref(h, currentIdx);
         parent_ref  = cvector_get_ref(h, parentIdx);
     }
