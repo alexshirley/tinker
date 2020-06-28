@@ -7,15 +7,14 @@ extern "C" {
 
 #include <stdbool.h>
 
-
 typedef struct prio_q prio_q_t;
-typedef int (*compare)(const void *, const void *);
+typedef int (*compare)(const void*, const void*);
 
 size_t prio_q_required_size(unsigned long element_size, unsigned long number_elements);
 bool prio_q_init(prio_q_t** p, char* block, unsigned long size, unsigned long element_size, compare func);
-bool prio_q_peek(prio_q_t * p, void* out);
-bool prio_q_insert(prio_q_t* q, void* value);
-
+bool prio_q_peek(prio_q_t* p, void* out);
+bool prio_q_insert(prio_q_t* q, const void* value);
+bool prio_q_remove(prio_q_t* q, void* value);
 
 #ifdef __cplusplus
 } // extern "C"

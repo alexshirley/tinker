@@ -3,6 +3,15 @@
 #include <string.h>
 
 static void swap(void* __restrict a, void* __restrict b, size_t len);
+static int childL_idx(int parent) {
+    return parent * 2 + 1;
+}
+static int childR_idx(int parent) {
+    return parent * 2 + 2;
+}
+static int parent_idx(int child) {
+    return (child - 1) / 2;
+}
 
 typedef struct prio_q {
     compare func;
@@ -61,4 +70,34 @@ static void swap(void* __restrict a, void* __restrict b, size_t len) {
         *p++     = *q;
         *q++     = tmp;
     };
+}
+
+static void siftDown(prio_q_t* q, int currentIdx, int endIdx) {
+    cvector_t* __restrict h = q->heap;
+    for (int childL_pos = childL_idx(currentIdx); childL_pos <= endIdx;) {
+        const int childR_pos         = childR_idx(currentIdx) <= endIdx ? childR_idx(currentIdx) : -1;
+        void* __restrict childR_ref  = cvector_get_ref(h, childR_pos);
+        void* __restrict childL_ref  = cvector_get_ref(h, childL_pos);
+        const int swap_idx           = (childR_pos != -1 && q->func(childR_ref, childL_ref) < 0) ? childR_pos : childL_pos;
+        void* __restrict swap_ref    = cvector_get_ref(h, swap_idx);
+        void* __restrict current_ref = cvector_get_ref(h, currentIdx);
+        if (q->func(swap_ref, current_ref) >= 0) {
+            return;
+        }
+        swap(current_ref, swap_ref, cvector_element_size(h));
+        currentIdx = swap_idx;
+        childL_pos = childL_idx(currentIdx);
+    }
+}
+
+bool prio_q_remove(prio_q_t* q, void* value) {
+    cvector_t* __restrict h = q->heap;
+    const size_t h_size     = cvector_size(h);
+    if (!h_size) { // if we have no elements, early terminate
+        return false;
+    }
+    swap(cvector_get_ref(h, 0), cvector_get_ref(h, h_size - 1), cvector_element_size(h));
+    cvector_pop_back(h, value);
+    siftDown(q, 0, cvector_size(h) - 1);
+    return true;
 }
