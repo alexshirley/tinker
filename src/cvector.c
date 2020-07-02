@@ -2,8 +2,8 @@
 #include <cvector.h>
 
 typedef struct cvector {
-    size_t capacity;
-    size_t elem_size;
+    size_t capacity;  // in bytes
+    size_t elem_size; // in bytes
     char* last_entry;
     char block[1];
 } cvector_t;
