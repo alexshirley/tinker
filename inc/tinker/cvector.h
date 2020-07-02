@@ -18,11 +18,11 @@ unsigned long cvector_required_size(unsigned long element_size, unsigned long nu
 
 // init populates a cvector handle with a block, block size, and the size of each element. The entirety of the block size is used
 // returns false if unsuccessful
-bool cvector_init(cvector_t** vec, char* __restrict block, unsigned long block_size, unsigned long element_size);
+bool cvector_init(cvector_t** __restrict vec, char* __restrict block, unsigned long block_size, unsigned long element_size);
 
 // resize populates a cvector handle after a successfull realloc (or giving a different block size, if using automatic char[])
 // returns false if unsucessful
-bool cvector_resize(cvector_t** vec, char* __restrict block, unsigned long block_size);
+bool cvector_resize(cvector_t** __restrict vec, char* __restrict block, unsigned long block_size);
 
 // push_back pushes a value to the back of the cvector
 // returns false if unsuccessful

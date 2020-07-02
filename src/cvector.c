@@ -12,7 +12,7 @@ unsigned long cvector_required_size(unsigned long element_size, unsigned long nu
     return offsetof(cvector_t, block) + (element_size * number_elements);
 }
 
-bool cvector_init(cvector_t** vec, char* buffer, unsigned long block_size, unsigned long element_size) {
+bool cvector_init(cvector_t** __restrict vec, char* __restrict buffer, unsigned long block_size, unsigned long element_size) {
     if (block_size < offsetof(cvector_t, block)) {
         return false;
     }
@@ -24,7 +24,7 @@ bool cvector_init(cvector_t** vec, char* buffer, unsigned long block_size, unsig
     return true;
 }
 
-bool cvector_resize(cvector_t** vec, char* __restrict block, unsigned long block_size) {
+bool cvector_resize(cvector_t** __restrict vec, char* __restrict block, unsigned long block_size) {
     if (block_size < offsetof(cvector_t, block) + (*vec)->capacity) {
         return false;
     }
@@ -66,7 +66,7 @@ bool cvector_get(const cvector_t* vec, unsigned long element_index, void* value)
     return true;
 }
 
-bool cvector_set(cvector_t* vec, unsigned long element_index, const void* value) {
+bool cvector_set(cvector_t* __restrict vec, unsigned long element_index, const void* value) {
     void* address = cvector_get_ref(vec, element_index);
     if (address == NULL) {
         return false;
@@ -83,7 +83,7 @@ int cvector_capacity(const cvector_t* vec) {
     return vec->capacity / vec->elem_size;
 }
 
-bool cvector_reserve(cvector_t* vec, size_t number_of_elements) {
+bool cvector_reserve(cvector_t* __restrict vec, size_t number_of_elements) {
     uintptr_t new_last_entry = (uintptr_t)vec->last_entry + number_of_elements * vec->elem_size;
     if (new_last_entry > vec->capacity + (uintptr_t)vec->block) {
         return false;
