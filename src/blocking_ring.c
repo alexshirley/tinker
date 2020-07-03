@@ -5,8 +5,8 @@
 typedef struct blocking_ring {
     size_t element_size;
     size_t capacity;
-    char* __restrict push_p;
-    char* __restrict pop_p;
+    char* push_p;
+    char* pop_p;
     bool full;
     char data[1];
 } blocking_ring_t;
@@ -58,8 +58,8 @@ bool blocking_ring_full(blocking_ring_t* __restrict c) {
 }
 
 void blocking_ring_clear(blocking_ring_t* __restrict c) {
-    c->full = false;
-    c->pop_p  = c->push_p;
+    c->full  = false;
+    c->pop_p = c->push_p;
 }
 
 static char* inc_head(blocking_ring_t* __restrict c, char* __restrict ptr) {
@@ -71,7 +71,7 @@ static char* inc_head(blocking_ring_t* __restrict c, char* __restrict ptr) {
 }
 
 bool blocking_ring_push(blocking_ring_t* __restrict c, const void* __restrict pData) {
-    if (c->full){
+    if (c->full) {
         return false;
     }
     memcpy(c->push_p, pData, c->element_size);
