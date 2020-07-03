@@ -39,4 +39,4 @@ endif()
 
 add_subdirectory(cvector)
 add_subdirectory(ring)
-
+add_subdirectory(priority_queue)
