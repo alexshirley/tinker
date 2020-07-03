@@ -2,11 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 
 project(tinker_tests LANGUAGES C)
 
-include(CTest)
-
 include_directories( 
     .
-    ../ThirdParty/greatest
     ../inc/tinker
 )
 
@@ -37,6 +34,5 @@ if (WIN32)
     add_definitions(-D_WIN32_WINNT=0x0601)
 endif()
 
-add_subdirectory(cvector)
-add_subdirectory(ring)
-add_subdirectory(priority_queue)
+add_subdirectory(fir_example)
+
