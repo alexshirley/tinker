@@ -5,8 +5,8 @@
 typedef struct ring {
     size_t element_size;
     size_t capacity;
-    char* __restrict push_p;
-    char* __restrict pop_p;
+    char* push_p;
+    char* pop_p;
     bool full;
     char data[1];
 } non_blocking_ring_t;
@@ -58,8 +58,8 @@ bool non_blocking_ring_full(non_blocking_ring_t* __restrict c) {
 }
 
 void non_blocking_ring_clear(non_blocking_ring_t* __restrict c) {
-    c->full = false;
-    c->pop_p  = c->push_p;
+    c->full  = false;
+    c->pop_p = c->push_p;
 }
 
 static char* inc_head(non_blocking_ring_t* __restrict c, char* __restrict ptr) {
