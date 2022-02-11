@@ -4,8 +4,8 @@
 #define NUM_ARR_ELE(x) (sizeof(x) / sizeof(x[0]))
 
 typedef struct {
-    int element_count;
-    int element_size;
+    size_t element_count;
+    size_t element_size;
 } init_closure;
 
 TEST dsp_ring_creation_test(void* closure) {
@@ -14,7 +14,7 @@ TEST dsp_ring_creation_test(void* closure) {
     char* block         = malloc(alloc_size);
     dsp_ring_t* hdl;
     dsp_ring_init(&hdl, block, alloc_size, args->element_size);
-    ASSERT_EQ(args->element_count, (int)dsp_ring_capacity(hdl));
+    ASSERT_EQ(args->element_count, dsp_ring_capacity(hdl));
     free(block);
     PASS();
 }
@@ -38,7 +38,7 @@ void dsp_teardown(void* closure) {
 TEST dsp_empty_test(void* closure) {
     dsp_closure* args = (dsp_closure*)closure;
     dsp_ring_t* hdl   = args->hdl;
-    for (int i = 0; i < (int)dsp_ring_capacity(hdl); i++) {
+    for (unsigned i = 0; i < dsp_ring_capacity(hdl); i++) {
         uint16_t* grab = dsp_ring_index(hdl, i);
         ASSERT(NULL != grab);
         ASSERT_EQ(0, *grab);
@@ -52,7 +52,7 @@ TEST dsp_push_test(void* closure) {
     for (uint16_t i = 0; i < (uint16_t)dsp_ring_capacity(hdl); i++) {
         dsp_ring_push(hdl, &i);
     }
-    for (int i = 0; i < (int)dsp_ring_capacity(hdl); i++) {
+    for (unsigned i = 0; i < dsp_ring_capacity(hdl); i++) {
         uint16_t* grab = dsp_ring_index(hdl, i);
         ASSERT(NULL != grab);
         ASSERT_EQ(i, *grab);
@@ -67,7 +67,7 @@ TEST dsp_clear_test(void* closure) {
         dsp_ring_push(hdl, &i);
     }
     dsp_ring_clear(hdl);
-    for (int i = 0; i < (int)dsp_ring_capacity(hdl); i++) {
+    for (unsigned i = 0; i < dsp_ring_capacity(hdl); i++) {
         uint16_t* grab = dsp_ring_index(hdl, i);
         ASSERT(NULL != grab);
         ASSERT_EQ(0, *grab);
@@ -78,9 +78,9 @@ TEST dsp_clear_test(void* closure) {
 SUITE(dsp_ring_suite) {
     int element_sizes[]  = {1, 2, 4, 8, 17};    // Common Sizes of elements + one odd size to simulate struct
     int element_counts[] = {1, 2, 4, 16, 1024}; // Common Buffer Element Capacities
-    for (int i = 0; i < NUM_ARR_ELE(element_sizes); i++) {
-        for (int j = 0; j < NUM_ARR_ELE(element_counts); j++) {
-            init_closure obj = {.element_count = element_counts[j], .element_size = element_sizes[i]};
+    for (unsigned i = 0; i < NUM_ARR_ELE(element_sizes); i++) {
+        for (unsigned j = 0; j < NUM_ARR_ELE(element_counts); j++) {
+            init_closure obj = {.element_count = (size_t)element_counts[j], .element_size = (size_t)element_sizes[i]};
             RUN_TESTp(dsp_ring_creation_test, &obj);
         }
     }

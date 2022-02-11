@@ -68,4 +68,4 @@ size_t cvector_size(const cvector_t* __restrict v);
 } // extern "C"
 #endif
 
-#endif // TINKE_CVECTOR_H Guard
+#endif // TINKER_CVECTOR_H Guard
