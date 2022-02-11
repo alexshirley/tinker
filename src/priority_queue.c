@@ -27,7 +27,7 @@ size_t prio_q_required_size(unsigned long element_size, unsigned long number_ele
     return sizeof(prio_q_t) + cvector_required_size(element_size, number_elements);
 }
 
-bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned long element_size, compare func) {
+bool prio_q_init(prio_q_t** __restrict p, char* __restrict block, unsigned long block_size, unsigned long element_size, compare func) {
     if (block_size < prio_q_required_size(0, 0)) {
         return false;
     }

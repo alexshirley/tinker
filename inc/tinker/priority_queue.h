@@ -16,11 +16,11 @@ typedef struct prio_q prio_q_t;
 typedef int (*compare)(const void*, const void*);
 
 size_t prio_q_required_size(unsigned long element_size, unsigned long number_elements);
-bool prio_q_init(prio_q_t** p, char* block, unsigned long block_size, unsigned long element_size, compare func);
+bool prio_q_init(prio_q_t** __restrict p, char* __restrict block, unsigned long block_size, unsigned long element_size, compare func);
 void prio_q_create_from_cvec(prio_q_t** p, char block[16], cvector_t* vec, compare func);
-bool prio_q_peek(prio_q_t* p, void* out);
-bool prio_q_push(prio_q_t* q, const void* value);
-bool prio_q_pop(prio_q_t* q, void* value);
+bool prio_q_peek(prio_q_t* __restrict p, void* out);
+bool prio_q_push(prio_q_t* __restrict p, const void* value);
+bool prio_q_pop(prio_q_t* __restrict p, void* value);
 
 #ifdef __cplusplus
 } // extern "C"
