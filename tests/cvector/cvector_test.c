@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <greatest.h>
 #include <cvector.h>
 #include <stdint.h>

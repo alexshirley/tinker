@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <greatest.h>
 
 #define NUM_ARR_ELE(x) (sizeof(x) / sizeof(x[0]))
