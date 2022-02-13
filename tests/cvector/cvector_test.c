@@ -3,10 +3,6 @@
 #include <cvector.h>
 #include <stdint.h>
 
-TEST dummy_test() {
-    PASS();
-}
-
 TEST cvector_push_test() {
     // We'll store ints
     uint32_t alloc_size = cvector_required_size(sizeof(int), 10);
@@ -18,8 +14,8 @@ TEST cvector_push_test() {
     for (int i = 0; i < 10; i++) {
         ASSERT_EQ(true, cvector_push_back(cvec_hdl, &i));
     }
-    for (int i = 0; i < 10; i++) {
-        int temp;
+    for (unsigned i = 0; i < 10; i++) {
+        unsigned temp;
         ASSERT_EQ(true, cvector_get(cvec_hdl, i, &temp));
         ASSERT_EQ(i, temp);
     }
@@ -57,7 +53,7 @@ TEST cvector_set_test() {
     int testval = 1;
     ASSERT_EQ(true, cvector_set(cvec_hdl, 0, &testval));
     ASSERT_EQ(true, cvector_reserve(cvec_hdl, 9));
-    for (int i = 0; i < 10; i++) {
+    for (unsigned i = 0; i < 10; i++) {
         cvector_set(cvec_hdl, i, &i);
     }
     ASSERT_FALSE(cvector_reserve(cvec_hdl, 1));
@@ -67,7 +63,7 @@ TEST cvector_set_test() {
 
 TEST cvector_resize_test() {
     char block[1000];
-    int alloc_size = cvector_required_size(sizeof(uint16_t), 10);
+    size_t alloc_size = cvector_required_size(sizeof(uint16_t), 10);
     cvector_t* hdl;
     ASSERT_EQ(true, cvector_init(&hdl, block, alloc_size, sizeof(uint16_t)));
     ASSERT_EQ(true, cvector_reserve(hdl, 1));
@@ -90,7 +86,7 @@ TEST cvector_resize_test() {
 
 TEST cvector_resize_realloc() {
     char* block     = malloc(1000);
-    int needed_size = cvector_required_size(sizeof(uint32_t), 10);
+    size_t needed_size = cvector_required_size(sizeof(uint32_t), 10);
     cvector_t* hdl;
     ASSERT_EQ(true, cvector_init(&hdl, block, needed_size, sizeof(uint32_t)));
     uint32_t testval = 0xdeadbeef;
@@ -111,7 +107,7 @@ TEST cvector_resize_realloc() {
 
 TEST cvector_size_test() {
     char* block     = malloc(1000);
-    int needed_size = cvector_required_size(sizeof(uint32_t), 10);
+    size_t needed_size = cvector_required_size(sizeof(uint32_t), 10);
     cvector_t* hdl;
     ASSERT_EQ(true, cvector_init(&hdl, block, needed_size, sizeof(uint32_t)));
     ASSERT_EQ(0, cvector_size(hdl));
@@ -141,14 +137,14 @@ TEST cvector_swap_ref_test() {
         cvector_push_back(hdl, &i);
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (unsigned i = 0; i < 5; i++) {
         swap(cvector_get_ref(hdl, i), cvector_get_ref(hdl, 10 - i - 1), sizeof(int));
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (unsigned i = 0; i < 10; i++) {
         int trash;
         cvector_get(hdl, i, &trash);
-        ASSERT_EQ_FMTm("Should be equal", 10 - i - 1, trash, "%d");
+        ASSERT_EQ_FMTm("Should be equal", 10 - i - 1, (unsigned)trash, "%d");
     }
 
     PASS();
