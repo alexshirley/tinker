@@ -40,20 +40,15 @@ bool cvector_push_back(cvector_t* __restrict vec, const void* __restrict value) 
         return false;
     }
     memcpy(vec->last_entry, value, vec->elem_size);
-    uintptr_t next_entry = (uintptr_t)vec->last_entry + vec->elem_size;
-    vec->last_entry      = (void*)next_entry;
+    vec->last_entry += vec->elem_size;
     return true;
 }
 
 bool cvector_pop_back(cvector_t* __restrict vec, void* __restrict value) {
-    const size_t num_elements = cvector_size(vec);
-    if (!num_elements) {
+    if (vec->last_entry == vec->block)
         return false;
-    }
-    unsigned long element_index = num_elements - 1;
-    void* address               = cvector_get_ref(vec, element_index);
-    memcpy(value, address, vec->elem_size);
     vec->last_entry -= vec->elem_size;
+    memcpy(value, vec->last_entry, vec->elem_size);
     return true;
 }
 
@@ -110,5 +105,5 @@ size_t cvector_element_size(const cvector_t* v) {
 }
 
 size_t cvector_size(const cvector_t* v) {
-    return (v->last_entry - v->block) / v->elem_size;
+    return (size_t)(v->last_entry - v->block) / v->elem_size;
 }
