@@ -25,12 +25,14 @@ bool cvector_init(cvector_t** __restrict vec, char* __restrict buffer, unsigned 
 }
 
 bool cvector_resize(cvector_t** __restrict vec, char* __restrict block, unsigned long block_size) {
-    if (block_size < offsetof(cvector_t, block) + (*vec)->capacity) {
+    size_t oldSize = offsetof(cvector_t, block) + (*vec)->capacity;
+    if (block_size < oldSize) {
         return false;
     }
-    memmove(block, (*vec), block_size);
-    *vec             = (cvector_t*)block;
-    (*vec)->capacity = block_size - offsetof(cvector_t, block);
+    ptrdiff_t distance = (*vec)->last_entry - (*vec)->block;
+    *vec               = memmove(block, (*vec), oldSize);
+    (*vec)->capacity   = block_size - offsetof(cvector_t, block);
+    (*vec)->last_entry = (*vec)->block + distance;
     return true;
 }
 
