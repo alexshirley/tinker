@@ -17,7 +17,7 @@ bool dsp_ring_init(dsp_ring_t** __restrict c, char* block, size_t block_size, si
     if (block_size < offsetof(dsp_ring_t, data)) {
         return false;
     }
-    if (element_size < 1) {
+    if (element_size == 0) {
         return false;
     }
     memset(block, 0, block_size);

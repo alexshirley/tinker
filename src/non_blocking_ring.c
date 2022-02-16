@@ -19,7 +19,7 @@ bool non_blocking_ring_init(non_blocking_ring_t** __restrict c, char* block, siz
     if (block_size < offsetof(non_blocking_ring_t, data)) {
         return false;
     }
-    if (element_size < 1) {
+    if (element_size == 0) {
         return false;
     }
     memset(block, 0, block_size);
