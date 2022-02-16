@@ -43,8 +43,8 @@ uint32_t non_blocking_ring_count(non_blocking_ring_t* __restrict c) {
     const ptrdiff_t pop_p       = (ptrdiff_t)c->pop_p;
     const ptrdiff_t push_p      = (ptrdiff_t)c->push_p;
     const ptrdiff_t data_offset = (push_p - pop_p);
-    const ptrdiff_t actual_data = (data_offset > 0) ? data_offset : c->capacity * c->element_size - data_offset;
-    return actual_data / c->element_size;
+    const ptrdiff_t actual_data = (data_offset > 0) ? data_offset : (ptrdiff_t)c->capacity * (ptrdiff_t)c->element_size - data_offset;
+    return (size_t)actual_data / c->element_size;
 }
 
 bool non_blocking_ring_empty(non_blocking_ring_t* __restrict c) {
@@ -97,8 +97,8 @@ void* non_blocking_ring_index(non_blocking_ring_t* __restrict c, uint32_t index)
     if (non_blocking_ring_count(c) <= index) {
         return NULL;
     }
-    const ptrdiff_t max_address = (ptrdiff_t)c->data + c->capacity * c->element_size;
-    ptrdiff_t v_index_address   = (ptrdiff_t)c->pop_p + index * c->element_size;
-    ptrdiff_t offset            = (v_index_address >= max_address) ? v_index_address - max_address + (ptrdiff_t)c->data : v_index_address;
+    const size_t max_address     = (size_t)c->data + c->capacity * c->element_size;
+    const size_t v_index_address = (size_t)c->pop_p + index * c->element_size;
+    const size_t offset          = (v_index_address >= max_address) ? v_index_address - max_address + (size_t)c->data : v_index_address;
     return (void*)offset;
 }
