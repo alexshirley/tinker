@@ -22,6 +22,7 @@ TEST pq_create_from_vec_test(){
     cvector_t * vhdl;
     char buf[1000];
     cvector_init(&vhdl, buf, 1000, sizeof(int));
+    int remaining = cvector_capacity(vhdl);
     int rand = 2000;
     while (cvector_push_back(vhdl, &(rand))){
         rand--;
@@ -35,7 +36,7 @@ TEST pq_create_from_vec_test(){
     prio_q_t * UUT;
     prio_q_create_from_cvec(&UUT,pq_header,vhdl,pq_comp_min);
     cvector_get(vhdl,0,&first_element);
-    ASSERT_EQ_FMT(1757,first_element,"%d");
+    ASSERT_EQ_FMT(2000 - remaining + 1,first_element,"%d");
 
     PASS();
 }

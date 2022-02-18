@@ -4,6 +4,7 @@
 typedef struct cvector {
     size_t capacity;  // in bytes
     size_t elem_size; // in bytes
+    size_t used;
     char* last_entry;
     char block[1];
 } cvector_t;
@@ -21,6 +22,7 @@ bool cvector_init(cvector_t** __restrict vec, char* __restrict buffer, unsigned 
     (*vec)->capacity   = block_size - offsetof(cvector_t, block);
     (*vec)->last_entry = (*vec)->block;
     (*vec)->elem_size  = element_size;
+    (*vec)->used = 0;
     return true;
 }
 
@@ -43,6 +45,7 @@ bool cvector_push_back(cvector_t* __restrict vec, const void* __restrict value) 
     }
     memcpy(vec->last_entry, value, vec->elem_size);
     vec->last_entry += vec->elem_size;
+    vec->used += 1;
     return true;
 }
 
@@ -50,6 +53,7 @@ bool cvector_pop_back(cvector_t* __restrict vec, void* __restrict value) {
     if (vec->last_entry == vec->block)
         return false;
     vec->last_entry -= vec->elem_size;
+    vec->used -= 1;
     memcpy(value, vec->last_entry, vec->elem_size);
     return true;
 }
@@ -107,5 +111,5 @@ size_t cvector_element_size(const cvector_t* v) {
 }
 
 size_t cvector_size(const cvector_t* v) {
-    return (size_t)(v->last_entry - v->block) / v->elem_size;
+    return v->used;
 }
