@@ -43,7 +43,7 @@ size_t blocking_ring_count(blocking_ring_t* __restrict c) {
     const ptrdiff_t pop_p       = (ptrdiff_t)c->pop_p;
     const ptrdiff_t push_p      = (ptrdiff_t)c->push_p;
     const ptrdiff_t data_offset = (push_p - pop_p);
-    const ptrdiff_t actual_data = (data_offset > 0) ? data_offset : c->capacity * c->element_size - data_offset;
+    const size_t actual_data    = (data_offset > 0) ? (size_t)data_offset : c->capacity * c->element_size - (size_t)data_offset;
     return actual_data / c->element_size;
 }
 
@@ -97,8 +97,8 @@ void* blocking_ring_index(blocking_ring_t* __restrict c, uint32_t index) {
     if (blocking_ring_count(c) <= index) {
         return NULL;
     }
-    const ptrdiff_t max_address = (ptrdiff_t)c->data + c->capacity * c->element_size;
-    ptrdiff_t v_index_address   = (ptrdiff_t)c->pop_p + index * c->element_size;
-    ptrdiff_t offset            = (v_index_address >= max_address) ? v_index_address - max_address + (ptrdiff_t)c->data : v_index_address;
+    const size_t max_address = (size_t)c->data + c->capacity * c->element_size;
+    size_t v_index_address   = (size_t)c->pop_p + index * c->element_size;
+    size_t offset            = (v_index_address >= max_address) ? v_index_address - max_address + (size_t)c->data : v_index_address;
     return (void*)offset;
 }
