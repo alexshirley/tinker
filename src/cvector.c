@@ -23,7 +23,7 @@ bool cvector_init(cvector_t** __restrict vec, char* __restrict buffer, unsigned 
     (*vec)->capacity   = block_size - offsetof(cvector_t, block);
     (*vec)->last_entry = (*vec)->block;
     (*vec)->elem_size  = element_size;
-    (*vec)->used = 0;
+    (*vec)->used       = 0;
     return true;
 }
 
