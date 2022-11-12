@@ -11,7 +11,7 @@ typedef struct blocking_ring {
     char data[1];
 } blocking_ring_t;
 
-unsigned long blocking_ring_required_size(unsigned long element_size, unsigned long number_elements) {
+size_t blocking_ring_required_size(unsigned long element_size, unsigned long number_elements) {
     return offsetof(blocking_ring_t, data) + (element_size * number_elements);
 }
 
@@ -32,11 +32,11 @@ bool blocking_ring_init(blocking_ring_t** __restrict c, char* block, size_t bloc
     return true;
 }
 
-uint32_t blocking_ring_capacity(blocking_ring_t* __restrict c) {
+size_t blocking_ring_capacity(blocking_ring_t* __restrict c) {
     return c->capacity;
 }
 
-uint32_t blocking_ring_count(blocking_ring_t* __restrict c) {
+size_t blocking_ring_count(blocking_ring_t* __restrict c) {
     if (c->full) {
         return c->capacity;
     }
