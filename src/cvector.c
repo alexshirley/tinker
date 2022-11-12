@@ -1,5 +1,6 @@
 #include <string.h>
 #include <cvector.h>
+#include <stdint.h>
 
 typedef struct cvector {
     size_t capacity;  // in bytes
