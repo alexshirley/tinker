@@ -20,7 +20,7 @@ bool blocking_ring_push(blocking_ring_t* __restrict c, const void* __restrict pD
 void blocking_ring_clear(blocking_ring_t* __restrict Fifo);
 bool blocking_ring_full(blocking_ring_t* __restrict c);
 size_t blocking_ring_capacity(blocking_ring_t* __restrict c);
-void * blocking_ring_index(blocking_ring_t* __restrict c, uint32_t index);
+void* blocking_ring_index(blocking_ring_t* __restrict c, uint32_t index);
 
 #ifdef __cplusplus
 } // extern C
