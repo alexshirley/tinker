@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,10 +16,10 @@ bool dsp_ring_init(dsp_ring_t** __restrict c, char* block, size_t block_size, si
 void dsp_ring_push(dsp_ring_t* __restrict c, const void* __restrict pData);
 void dsp_ring_clear(dsp_ring_t* __restrict c);
 uint32_t dsp_ring_capacity(dsp_ring_t* __restrict c);
-void * dsp_ring_index(dsp_ring_t* __restrict c, uint32_t index);
+void* dsp_ring_index(dsp_ring_t* __restrict c, uint32_t index);
 
 #ifdef __cplusplus
 } // extern C
 #endif
 
-#endif //guard
+#endif // guard
