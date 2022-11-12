@@ -26,4 +26,4 @@ void* blocking_ring_index(blocking_ring_t* __restrict c, uint32_t index);
 } // extern C
 #endif
 
-#endif //guard
+#endif // guard
